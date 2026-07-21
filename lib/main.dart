@@ -1,20 +1,39 @@
+import 'package:blogz/core/router.dart';
+import 'package:blogz/providers/auth_provider.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
+import 'package:provider/provider.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 void main() async {
-  // Supabase setup
+  WidgetsFlutterBinding.ensureInitialized();
+
   await Supabase.initialize(
-    publishableKey: "sb_publishable_cfeWgLxQiBkG0YoY4D3zkQ_VxVIAAdd",
-    url: "https://gxpvcrghbxxneqtplhrb.supabase.co",
+    publishableKey: 'sb_publishable_cfeWgLxQiBkG0YoY4D3zkQ_VxVIAAdd',
+    url: 'https://gxpvcrghbxxneqtplhrb.supabase.co',
+  );
+
+  final authProvider = AuthProvider();
+  final router = buildRouter(authProvider);
+
+  runApp(
+    ChangeNotifierProvider.value(
+      value: authProvider,
+      child: MyApp(router: router),
+    ),
   );
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+  final GoRouter router;
+  const MyApp({super.key, required this.router});
 
-  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return const MaterialApp(home: Scaffold());
+    return MaterialApp.router(
+      debugShowCheckedModeBanner: false,
+      routerConfig: router,
+      title: 'blogz',
+    );
   }
 }
