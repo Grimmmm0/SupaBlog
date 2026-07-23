@@ -1,6 +1,7 @@
 import 'package:blogz/core/router.dart';
 import 'package:blogz/providers/auth_provider.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
@@ -8,9 +9,11 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
+  await dotenv.load(fileName: ".env");
+
   await Supabase.initialize(
-    publishableKey: 'sb_publishable_cfeWgLxQiBkG0YoY4D3zkQ_VxVIAAdd',
-    url: 'https://gxpvcrghbxxneqtplhrb.supabase.co',
+    url: dotenv.get('SUPABASE_URL'),
+    publishableKey: dotenv.get('SUPABASE_ANON_KEY'),
   );
 
   final authProvider = AuthProvider();
